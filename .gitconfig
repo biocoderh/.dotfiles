@@ -1,0 +1,7 @@
+[user]
+	email = biocoder.h@gmail.com
+	name = Biocoder
+[init]
+	defaultBranch = master
+[alias]
+	dotfiles = !git --git-dir=$HOME/.dotfiles --work-tree=$HOME
