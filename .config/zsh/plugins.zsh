@@ -10,11 +10,9 @@ fi
 source $ZPLUGINDIR/zsh_unplugged/zsh_unplugged.zsh
 
 repos=(
-  # fast load, leave it first
-  romkatv/zsh-defer
-
-  # PLUGINS: 
+  # load order!
   romkatv/powerlevel10k
+  romkatv/zsh-defer
 
   zsh-users/zsh-history-substring-search
   zsh-users/zsh-autosuggestions
