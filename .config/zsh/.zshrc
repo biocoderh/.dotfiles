@@ -1,3 +1,11 @@
+# Hot reload
+function reload {
+  source $ZDOTDIR/.zshrc
+}
+
+# Directory navigation
+setopt autocd autopushd
+
 # Turn off all beeps
 unsetopt BEEP
 
