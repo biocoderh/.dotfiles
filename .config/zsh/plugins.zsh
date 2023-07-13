@@ -14,6 +14,8 @@ repos=(
   romkatv/zsh-defer
 
   # PLUGINS: 
+  romkatv/powerlevel10k
+
   zsh-users/zsh-history-substring-search
   zsh-users/zsh-autosuggestions
 
