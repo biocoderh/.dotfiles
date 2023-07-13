@@ -12,10 +12,13 @@ source $ZPLUGINDIR/zsh_unplugged/zsh_unplugged.zsh
 repos=(
   # fast load, leave it first
   romkatv/zsh-defer
+
   # PLUGINS: 
-  zsh-users/zsh-syntax-highlighting
   zsh-users/zsh-history-substring-search
   zsh-users/zsh-autosuggestions
+
+  #zsh-users/zsh-syntax-highlighting
+  zdharma-continuum/fast-syntax-highlighting
 )
 
 # Load all plugins
@@ -31,5 +34,5 @@ function plugins-list {
 
 function plugins-clean {
   rm -rfi $ZPLUGINDIR
-  zsh
+  reload
 }

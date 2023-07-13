@@ -68,6 +68,19 @@ bindkey -s '^o' 'lfcd\n'
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
+# fzf
+[ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+
 # Plugins
 source $ZDOTDIR/plugins.zsh
 
+# zsh-history-substring-search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
+# zsh-autosuggestions
+bindkey '^ ' autosuggest-accept
+bindkey '^@' autosuggest-accept
