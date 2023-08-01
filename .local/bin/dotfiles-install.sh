@@ -20,4 +20,4 @@ fi;
 dotfiles config status.showUntrackedFiles no
 
 chmod -R +x .local/bin
-sudo ln -s .local/share/libinput/local-overrides.quirks /usr/share/libinput/local-overrides.quirks
+sudo ln -s $HOME/.local/share/libinput/local-overrides.quirks /usr/share/libinput/local-overrides.quirks
