@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v pacman)" ]; then
+  echo "pacman is not installed."
+  exit 1
+fi
+
+if ! [ -x "$(command -v rankmirrors)" ]; then
+  echo "rankmirrors required. Installing pacman-contrib"
+  sudo pacman -Sy --noconfirm --needed pacman-contrib
+fi
+
+SOURCE="https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on"
+echo "Using source: $SOURCE"
+
+echo "Starting rankmirrors, it can take a while"
+curl -s "$SOURCE" | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors - | sudo tee /etc/pacman.d/mirrorlist
+
+echo "mirrorlist-update done."

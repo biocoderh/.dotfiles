@@ -1,0 +1,329 @@
+#!/bin/sh
+
+
+NOCONFIRM=false
+
+_confirm() {
+  if $NOCONFIRM; then
+    return 0
+  fi
+
+  while true; do
+     printf '%s ' "$1"
+     read -r yn
+      case ${yn:-"$2"} in
+        [Yy]* ) return 0;;
+        [Nn]* ) return 1;;
+            * ) echo "Please answer yes or no.";;
+      esac
+  done
+}
+
+confirm() {
+  _confirm "$1 [y/n]"
+}
+
+confirm_yes() {
+  _confirm "$1 [Y/n]" "Y"
+}
+
+confirm_no() {
+  _confirm "$1 [y/N]" "N"
+}
+
+
+#
+# confirm
+#
+
+confirm_yes "Want to continue?" || exit 0
+
+if confirm_no "Run everything without confirmation?"; then
+  NOCONFIRM=true
+else
+  NOCONFIRM=false
+fi
+
+
+#
+# symlinks
+#
+
+_symlink() {
+  [ "$(readlink -f "$2")" = "$1" ] && return 0
+
+  if [ -f "$2" ]; then
+    echo "File $2 already exists, can't create symlink to $1"
+    return 1
+  fi
+
+  echo "Creating symlink $2 > $1"
+  confirm_yes "Create $2 symlink?" && $3 ln -s "$1" "$2"
+  return $?
+}
+
+symlink() {
+  _symlink "$1" "$2"
+  return $?
+}
+
+sudo_symlink() {
+  _symlink "$1" "$2" sudo
+  return $?
+}
+
+
+#
+# package manager
+#
+
+PACKAGE_MANAGER=false
+
+if [ -x "$(command -v pacman)" ]; then
+  PACKAGE_MANAGER="pacman"
+elif [ -x "$(command -v apk)" ]; then
+  PACKAGE_MANAGER="apk"
+elif [ -x "$(command -v apt-get)" ]; then
+  PACKAGE_MANAGER="apt-get"
+else
+  echo "WARNING: Supported package manager not found."
+fi
+
+pkg_update() {
+  case $PACKAGE_MANAGER in
+    "pacman") sudo pacman -Sy ;;
+    "apk") sudo apk update ;;
+    "apt-get") sudo apt-get update ;;
+    *) return 1
+  esac
+  return $?
+}
+
+# shellcheck disable=SC2068
+pkg_install() {
+  case $PACKAGE_MANAGER in
+    "pacman") sudo pacman -S --noconfirm --needed $@ ;;
+    "apk") sudo apk add $@ ;;
+    "apt-get") sudo apt-get install -y $@ ;;
+    *) return 1
+  esac
+  return $?
+}
+
+
+AUR_PACKAGE_MANAGER=false
+
+if [ "$PACKAGE_MANAGER" = "pacman" ]; then
+  if [ -x "$(command -v paru)" ]; then
+    AUR_PACKAGE_MANAGER="paru"
+  elif [ -x "$(command -v yay)" ]; then
+    AUR_PACKAGE_MANAGER="yay"
+  else
+    echo "WARNING: Supported AUR package manager not found."
+  fi
+fi
+
+# shellcheck disable=SC2068
+aur_install() {
+  # check binary cache
+  if pacman -Si $@ &> /dev/null; then
+    sudo pacman -S --noconfirm --needed $@
+    return $?
+  fi
+
+  case $AUR_PACKAGE_MANAGER in
+    "paru") paru -S --noconfirm --needed --sudoloop --skipreview $@ ;;
+    "yay") yay -S --noconfirm --needed --sudoloop $@ ;;
+    *) return 1
+  esac
+  return $?
+}
+
+
+DO_PKG_UPDATE=true
+
+install() {
+  if [ $PACKAGE_MANAGER = false ]; then
+    echo "Supported package manager not found."
+    echo "Can't install: $*"
+    return 1
+  fi
+
+  if [ $DO_PKG_UPDATE = true ]; then
+    echo "Update $PACKAGE_MANAGER cache"
+
+    if pkg_update; then
+      DO_PKG_UPDATE=false
+    else
+      echo "Can't update $PACKAGE_MANAGER cache"
+      return 1
+    fi
+  fi
+
+  if pkg_install "$@"; then
+    return 0
+  else
+    echo "Can't install: $*"
+    return 1
+  fi
+}
+
+
+
+#
+# start here
+#
+
+# create symlinks
+
+[ -d "/usr/share/libinput" ] && sudo_symlink "$HOME"/.local/share/libinput/local-overrides.quirks /usr/share/libinput/local-overrides.quirks
+
+
+# packages
+
+ESSENTIAL_PACKAGES="man-db tldr zsh fzf lf neovim"
+NETWORK_PACKAGES="bind nmap iperf3 proxychains-ng youtube-dl"
+
+MULTIMEDIA_PACKAGES="mpv gimp"
+KDE_EXTRA_PACKAGES="partitionmanager gwenview okular spectacle kcalc dolphin-plugins kio-gdrive krfb ktorrent kdeconnect kmail"
+
+run_packages() {
+
+  # Essential packages
+  confirm_yes "Install essential packages ($ESSENTIAL_PACKAGES)?" && install "$ESSENTIAL_PACKAGES"
+
+  # Network packages
+  confirm_yes "Install network packages ($NETWORK_PACKAGES)?" && install "$NETWORK_PACKAGES"
+
+  # GUI
+  if [ -n "$XDG_SESSION_TYPE" ] && [ "$XDG_SESSION_TYPE" != "tty" ]; then
+
+    # Multimedia packages
+    confirm_yes "Install multimedia packages ($MULTIMEDIA_PACKAGES)?" && install "$MULTIMEDIA_PACKAGES"
+
+    # Noto Fonts
+    confirm_yes "Install Noto Fonts?" && install noto-fonts noto-fonts-cjk noto-fonts-emoji
+
+    # Telegram
+    confirm_yes "Install Telegram Desktop?" && install telegram-desktop
+
+    # Remmina
+    confirm_yes "Install Remmina?" && install remmina libvncserver freerdp
+
+
+    # Wayland
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+      confirm_yes "Install wl-clipboard?" && install wl-clipboard
+    fi
+
+    # KDE
+    if [ "$XDG_CURRENT_DESKTOP" = "KDE" ]; then
+      confirm_yes "Install KDE extra packages ($KDE_EXTRA_PACKAGES)?" && install "$KDE_EXTRA_PACKAGES"
+    fi
+  fi
+
+  # pacman
+  if [ "$PACKAGE_MANAGER" = "pacman" ]; then
+
+    # AUR package manager
+    if [ "$AUR_PACKAGE_MANAGER" = false ]; then
+      if confirm_yes "Install paru?"; then
+        paru-install && AUR_PACKAGE_MANAGER="paru"
+      elif confirm_yes "Install yay?"; then
+        yay-install && AUR_PACKAGE_MANAGER="yay"
+      fi
+    fi
+
+    confirm_yes "Install ALHP repo?" && alhp-install
+    confirm_yes "Install Chaotic repo?" && chaotic-aur-install
+    confirm_yes "Install archlinuxcn repo?" && archlinuxcn-install
+
+    LINUX_HEADERS=""
+
+    # using archlinux default supported kernels
+    pacman -Q linux 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-headers"
+    pacman -Q linux-hardened 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-hardened-headers"
+    pacman -Q linux-lts 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-lts-headers"
+    pacman -Q linux-rt 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-rt-headers"
+    pacman -Q linux-rt-lts 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-rt-lts-headers"
+    pacman -Q linux-zen 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-zen-headers"
+
+    # broadcom wl dkms
+    lspci -vnn -d 14e4: | grep -q "wl" > /dev/null && confirm_yes "Install broadcom Wi-Fi drivers?" && install broadcom-wl-dkms "$LINUX_HEADERS"
+
+    # AUR
+    if [ "$AUR_PACKAGE_MANAGER" != false ]; then
+      # power managment
+      if [ -f "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors" ]; then
+        # auto-cpufreq
+        confirm_yes "Install auto-cpufreq?" && aur_install auto-cpufreq
+        sudo systemctl enable --now auto-cpufreq
+      fi
+
+      # wluma
+      if [ -d "/sys/bus/iio/devices/iio:device0" ]; then
+        confirm_yes "Install wluma?" && aur_install wluma
+        sudo usermod -a -G video "$(id -u -n)"
+        systemctl --user enable --now wluma
+      fi
+    fi
+
+
+    # GUI
+    if [ -n "$XDG_SESSION_TYPE" ] && [ "$XDG_SESSION_TYPE" != "tty" ]; then
+      # intel gpu
+      INTEL_GPU_PACKAGES="libva-utils intel-gpu-tools"
+      lspci | grep 'VGA.*Intel' > /dev/null && confirm_yes "Install intel gpu utils?" install "$INTEL_GPU_PACKAGES" && vainfo
+
+      # nerd-fonts
+      NERD_FONTS="ttf-firacode-nerd"
+      confirm_yes "Install Nerd-Fonts ($NERD_FONTS)?" && install "$NERD_FONTS"
+
+      # spotify
+      confirm_yes "Install Spotify?" && install spotify-launcher
+
+      # QEMU
+      QEMU_PACKAGES="qemu-full libvirt virt-manager"
+      [ -c "/dev/kvm" ] && confirm_yes "Install QEMU?" && install "$QEMU_PACKAGES"
+
+      # AUR
+      if [ "$AUR_PACKAGE_MANAGER" != false ]; then
+        # shadowsocks-electron
+        confirm_yes "Install Shadowsocks electron?" && aur_install shadowsocks-electron-bin
+        # sonixd
+        confirm_yes "Install Sonixd?" && aur_install sonixd-bin electron22-bin
+      fi
+    fi
+  fi
+
+
+  # bluetooth
+  if sudo dmesg | grep -i blue > /dev/null && confirm_yes "Install bluetooth?"; then
+    install bluez bluez-utils
+    sudo systemctl enable --now bluetooth
+  fi
+}
+
+[ $PACKAGE_MANAGER != false ] && run_packages
+
+
+# shell
+
+PREFERED_SHELL="/usr/bin/zsh"
+
+if [ "$SHELL" != "$PREFERED_SHELL" ] && [ -f "$PREFERED_SHELL" ] && confirm_yes "Current shell is $SHELL, change to $PREFERED_SHELL?"; then
+  echo "Changing current shell $SHELL to $PREFERED_SHELL" 
+  chsh -s /usr/bin/zsh
+fi
+
+
+# mitigations
+
+if [ -d "/boot/loader/entries/" ]; then
+  echo "systemd-boot supported, use: 'mitigations [on/off]' to switch kernel boot parameter"
+fi
+
+
+# done
+
+echo "dotfiles-post-install done."

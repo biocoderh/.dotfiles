@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v pacman)" ]; then
+  echo "pacman is not installed."
+  exit 1
+fi
+
+sudo pacman -Sy --noconfirm --needed git base-devel || exit 1
+git clone https://aur.archlinux.org/yay-bin.git || exit 1
+cd yay-bin || exit 1
+makepkg -cis --noconfirm --needed || exit 1
+cd ..
+rm -rdf yay-bin
+
+echo "yay-install done."
+

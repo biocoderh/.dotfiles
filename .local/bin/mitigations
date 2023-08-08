@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if ! { [ "$1" = "on" ] || [ "$1" = "off" ]; }; then
+  echo "Usage: mitigations [on/off]"
+  exit 1
+fi
+
+if ! [ -d "/boot/loader/entries/" ]; then
+  echo "Only systemd-boot supported"
+  exit 1
+fi
+
+for f in /boot/loader/entries/*.conf; do
+  echo "$f"
+
+  if grep -qF "mitigations=" "$f"; then
+    sudo sed -i "s/mitigations=.*/mitigations=$1/" "$f"
+  else
+    sudo sed -i "s/options.*/& mitigations=$1/" "$f"
+  fi
+done
+
+echo "mitigations '$1' done. Reboot and run 'lscpu' to check."

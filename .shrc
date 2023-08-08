@@ -1,0 +1,14 @@
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+alias pipewire-restart='systemctl --user restart wireplumber pipewire pipewire-pulse'
+
+if [ -n "$WSL" ]; then
+  alias ssh='ssh.exe'
+fi
+
+if [ -x "$(command -v proxychains)" ]; then
+  alias proxychains='proxychains -f $HOME/.config/proxychains/proxychains.conf'
+fi

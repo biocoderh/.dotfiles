@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v pacman)" ]; then
+  echo "pacman is not installed."
+  exit 1
+fi
+
+PACMAN_CONF="/etc/pacman.conf"
+
+grep -qxF "[archlinuxcn]" "$PACMAN_CONF" || sudo sed -i '$a\\n[archlinuxcn]\nServer = https://repo.archlinuxcn.org/$arch' $PACMAN_CONF
+
+sudo pacman -Sy --noconfirm --needed archlinuxcn-keyring
+
+echo "archlinuxcn-install done."

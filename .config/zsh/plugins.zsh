@@ -24,15 +24,15 @@ repos=(
 # Load all plugins
 plugin-load $repos
 
-function plugins-update {
+plugins-update() {
   plugin-update $repos
 }
 
-function plugins-list {
+plugins-list() {
   ls $ZPLUGINDIR
 }
 
-function plugins-clean {
+plugins-clean() {
   rm -rfi $ZPLUGINDIR
   reload
 }

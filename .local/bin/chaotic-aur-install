@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v pacman)" ]; then
+  echo "pacman is not installed."
+  exit 1
+fi
+
+
+sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key 3056513887B78AEB
+sudo pacman -U --noconfirm --needed 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+# setup check
+if ! pacman -Q chaotic-keyring chaotic-mirrorlist > /dev/null; then
+  echo "alhp-keyring alhp-mirrorlist not installed"
+  exit 1
+fi
+
+
+PACMAN_CONF="/etc/pacman.conf"
+
+grep -qxF "[chaotic-aur]" "$PACMAN_CONF" || sudo sed -i '$a\\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' $PACMAN_CONF
+
+sudo pacman -Sy
+echo "chaotic-aur-install done."

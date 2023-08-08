@@ -1,0 +1,38 @@
+#!/bin/sh
+
+if ! [ -x "$(command -v git)" ]; then
+  echo "git is not installed."
+  exit 1
+fi
+
+GIT_DIR="$HOME/.dotfiles"
+WORK_TREE="$HOME"
+BACKUP_DIR="$HOME/.dotfiles-backup"
+
+git clone --bare git@github.com:biocoderh/.dotfiles.git "$GIT_DIR"
+
+dotfiles() {
+  /usr/bin/git --git-dir="$GIT_DIR/" --work-tree="$WORK_TREE" "$@"
+}
+
+if dotfiles checkout; then
+  echo "Checked out dotfiles."
+else
+  echo "Backing up pre-existing dot files to $BACKUP_DIR"
+  mkdir -p "$BACKUP_DIR"
+  dotfiles checkout 2>&1 | grep -E "\s+\." | awk "{ print $1 }" | xargs -I{} mv "$WORK_TREE/"{} "$BACKUP_DIR/"{}
+  dotfiles checkout
+fi
+
+dotfiles config status.showUntrackedFiles no
+
+
+# shellcheck disable=SC1091
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
+
+chmod +x -R "$HOME/.local/bin"
+
+echo ".dotfiles installed, running dotfiles-post-install"
+dotfiles-post-install
+
+echo "dotfiles-install done."

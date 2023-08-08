@@ -1,4 +1,4 @@
-[[ -f ~/.profile ]] && . ~/.profile
+[[ -f ~/.shrc ]] && . ~/.shrc
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return

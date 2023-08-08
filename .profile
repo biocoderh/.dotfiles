@@ -3,13 +3,21 @@ export SAVEHIST=10000
 export HISTFILE="$HOME/.cache/.sh_history"
 
 export PATH="$PATH:$HOME/.local/bin"
-export ZDOTDIR="$HOME/.config/zsh"
 
-if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-    export MOZ_ENABLE_WAYLAND=1
+if [ -x "$(command -v nvim)" ]; then
+  export EDITOR="nvim"
+  export VISUAL="nvim"
 fi
 
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+  export MOZ_ENABLE_WAYLAND=1
+fi
 
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+if [ -f "/usr/bin/ksshaskpass" ]; then
+  export SSH_ASKPASS='/usr/bin/ksshaskpass'
+  export SSH_ASKPASS_REQUIRE=prefer
+fi
+
+if [ -x "$(cat /proc/sys/kernel/osrelease | grep -q WSL)" ]; then
+  export WSL=true
+fi
