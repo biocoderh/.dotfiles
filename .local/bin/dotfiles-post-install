@@ -126,7 +126,7 @@ fi
 # shellcheck disable=SC2068
 aur_install() {
   # check binary cache
-  if pacman -Si $@ &> /dev/null; then
+  if pacman -Si $@ > /dev/null 2>&1; then
     sudo pacman -S --noconfirm --needed $@
     return $?
   fi
@@ -224,6 +224,9 @@ run_packages() {
 
   # pacman
   if [ "$PACKAGE_MANAGER" = "pacman" ]; then
+
+    PARALLEL_DOWNLOADS=10
+    confirm_yes "Set parralel downloads to $PARALLEL_DOWNLOADS?" && sudo sed -i "s/ParallelDownloads.*/ParallelDownloads = $PARALLEL_DOWNLOADS/" /etc/pacman.conf
 
     # AUR package manager
     if [ "$AUR_PACKAGE_MANAGER" = false ]; then

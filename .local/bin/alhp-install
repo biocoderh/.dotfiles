@@ -43,8 +43,8 @@ aur_install() {
 
 ALHP_PACKAGES="alhp-keyring alhp-mirrorlist"
 
-# shellcheck disable=SC2068
-if ! pacman -Q $ALHP_PACKAGES &> /dev/null ; then
+# shellcheck disable=SC2086
+if ! pacman -Q $ALHP_PACKAGES > /dev/null 2>&1; then
   if ! aur_install "$ALHP_PACKAGES"; then
     echo "Can't install: $ALHP_PACKAGES"
     exit 1
