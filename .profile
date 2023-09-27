@@ -1,8 +1,9 @@
 export HISTSIZE=10000
 export SAVEHIST=10000
-export HISTFILE="$HOME/.cache/.sh_history"
+export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/history"
 
-export PATH="$PATH:$HOME/.local/bin"
+[ -z $PATH_ORIG ] && export PATH_ORIG="$PATH"
+export PATH="$PATH_ORIG:$HOME/.local/bin"
 
 if [ -x "$(command -v nvim)" ]; then
   export EDITOR="nvim"

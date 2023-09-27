@@ -5,14 +5,16 @@ if ! [ -x "$(command -v git)" ]; then
   exit 1
 fi
 
-GIT_DIR="$HOME/.dotfiles"
-WORK_TREE="$HOME"
-BACKUP_DIR="$HOME/.dotfiles-backup"
+GIT_URI="https://github.com/biocoderh/dotfiles.git"
 
-git clone --bare git@github.com:biocoderh/.dotfiles.git "$GIT_DIR"
+GIT_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
+BACKUP_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup"
+WORK_TREE_DIR="$HOME"
+
+git clone --bare "$GIT_URI" "$GIT_DIR"
 
 dotfiles() {
-  /usr/bin/git --git-dir="$GIT_DIR/" --work-tree="$WORK_TREE" "$@"
+  /usr/bin/git --git-dir="$GIT_DIR/" --work-tree="$WORK_TREE_DIR" "$@"
 }
 
 if dotfiles checkout; then
