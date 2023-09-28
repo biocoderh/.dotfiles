@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/biocoderh/dotfiles/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/biocoderh/dotfiles/actions/workflows/shellcheck.yml)
+[![ShellCheck](https://github.com/biocoderh/keyboards/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/biocoderh/keyboards/actions/workflows/shellcheck.yml)
 
 # dotfiles
 
