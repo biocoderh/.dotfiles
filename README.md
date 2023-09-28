@@ -1,4 +1,6 @@
-# .dotfiles
+[![Build Status](https://github.com/biocoderh/dotfiles/actions/workflows/main.yml/badge.svg)](https://github.com/biocoderh/dotfiles/actions/workflows/main.yml)
+
+# dotfiles
 
 dotfiles bare repo
 
