@@ -1,7 +1,17 @@
+name: "ShellCheck"
+
 on:
   push:
     branches:
-      - master
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+
+permissions: {}
+
+env:
+  SHELLCHECK_OPTS: -e SC1090
 
 jobs:
   shellcheck:
@@ -13,8 +23,6 @@ jobs:
 
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
-	env:
-          SHELLCHECK_OPTS: -e SC1090
         with:
           ignore_paths: >-
             .config/zsh
