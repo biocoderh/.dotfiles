@@ -34,5 +34,5 @@ plugins-list() {
 
 plugins-clean() {
   rm -rfi $ZPLUGINDIR
-  reload
+  exec zsh
 }
