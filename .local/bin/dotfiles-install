@@ -7,8 +7,11 @@ fi
 
 GIT_URI="https://github.com/biocoderh/dotfiles.git"
 
-GIT_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
-BACKUP_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+mkdir -p "$STATE_DIR"
+
+GIT_DIR="$STATE_DIR/dotfiles"
+BACKUP_DIR="$STATE_DIR/dotfiles-backup"
 WORK_TREE_DIR="$HOME"
 
 git clone --bare "$GIT_URI" "$GIT_DIR"
@@ -34,7 +37,7 @@ dotfiles config status.showUntrackedFiles no
 
 chmod +x -R "$HOME/.local/bin"
 
-echo ".dotfiles installed, running dotfiles-post-install"
+echo "running dotfiles-post-install"
 dotfiles-post-install
 
 echo "dotfiles-install done."
