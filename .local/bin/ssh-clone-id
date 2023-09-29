@@ -27,6 +27,7 @@ ssh-copy-id -i "$KEY_PATH.pub" "$REMOTE"
 
 scp "$KEY_PATH" "$KEY_PATH.pub" "$REMOTE:$HOME/.ssh/"
 
+# shellcheck disable=SC2016
 CMD='eval $(ssh-agent -s)'
 CMD="$CMD ; chmod 400 $REMOTE_KEY_PATH $REMOTE_PUBKEY_PATH"
 CMD="$CMD ; ssh-add $REMOTE_KEY_PATH"
