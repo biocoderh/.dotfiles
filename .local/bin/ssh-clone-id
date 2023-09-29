@@ -6,9 +6,9 @@ if [ -z "$1" ] || [ -z "$2" ]; then
 cat << EOF
 Clone ssh private and public keys to remote host.
 
-Usage: ssh-clone [key] [remote]
+Usage: ssh-clone-id [key] [remote]
 
-Example: ssh-clone .ssh/id_ed25519 biocoder@192.168.1.3
+Example: ssh-clone-id .ssh/id_ed25519 biocoder@192.168.1.3
 EOF
   exit 1
 fi
