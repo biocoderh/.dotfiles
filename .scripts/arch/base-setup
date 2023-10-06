@@ -1,0 +1,51 @@
+#!/bin/sh -e
+
+PACKAGES=" \
+man-db tldr \
+zsh tmux neovim \
+fzf lf \
+"
+
+PREFERED_SHELL="/usr/bin/zsh"
+
+pkgs sync
+pkgs install "$PACKAGES"
+
+if [ "$SHELL" != "$PREFERED_SHELL" ] && [ -f "$PREFERED_SHELL" ]; then
+  echo "Changing current shell $SHELL to $PREFERED_SHELL" 
+  chsh -s "$PREFERED_SHELL"
+fi
+
+# bluetooth
+if sudo dmesg | grep -i blue > /dev/null; then
+  pkgs install bluez bluez-utils
+  sudo systemctl enable --now bluetooth
+fi
+
+LINUX_HEADERS=""
+pacman -Q linux 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-headers"
+pacman -Q linux-hardened 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-hardened-headers"
+pacman -Q linux-lts 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-lts-headers"
+pacman -Q linux-rt 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-rt-headers"
+pacman -Q linux-rt-lts 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-rt-lts-headers"
+pacman -Q linux-zen 2> /dev/null && LINUX_HEADERS="$LINUX_HEADERS linux-zen-headers"
+
+# broadcom-wl
+lspci -vnn -d 14e4: | grep -q "wl" > /dev/null && pkgs install broadcom-wl-dkms "$LINUX_HEADERS"
+
+# auto-cpufreq
+if [ -d "/sys/class/power_supply/BAT0" ] && [ -f "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors" ]; then
+  pkgs install auto-cpufreq
+  sudo systemctl enable --now auto-cpufreq
+fi
+
+# Intel
+lspci | grep 'VGA.*Intel' > /dev/null && pkgs install intel-gpu-tools
+
+if lspci | grep 'VGA.*JasperLake' > /dev/null; then
+  pkgs install intel-media-sdk
+  # https://wiki.archlinux.org/title/intel_graphics#Enable_GuC_/_HuC_firmware_loading
+  echo "options i915 enable_guc=2" | sudo tee /etc/modprobe.d/i915.conf
+fi
+
+echo "base-setup done."

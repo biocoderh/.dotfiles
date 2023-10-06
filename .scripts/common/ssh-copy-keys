@@ -1,12 +1,9 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -e
 
 if [ -z "$1" ] || [ -z "$2" ]; then
 cat << EOF
-Clone ssh private and public keys to remote host.
-
-Usage: ssh-clone-id [key] [remote]
+Usage: ssh-clone-id KEY REMOTE
+Copy private and public keys to remote host, also add them to ssh agent.
 
 Example: ssh-clone-id .ssh/id_ed25519 biocoder@192.168.1.3
 EOF
@@ -33,3 +30,5 @@ CMD="$CMD ; chmod 400 $REMOTE_KEY_PATH $REMOTE_PUBKEY_PATH"
 CMD="$CMD ; ssh-add $REMOTE_KEY_PATH"
 
 ssh -tt -o StrictHostKeyChecking=no "$REMOTE" "$CMD"
+
+echo "ssh-copy-keys done."

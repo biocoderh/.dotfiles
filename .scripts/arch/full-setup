@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+repos-install
+
+base-setup
+desktop-setup
+
+extra-install all
+cups-install
+obs-install
+
+echo "full-setup done."

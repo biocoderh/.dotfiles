@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+PACKAGES=" \
+cups \
+avahi \
+foomatic-db-engine \
+foomatic-db \
+foomatic-db-ppds \
+foomatic-db-nonfree \
+foomatic-db-nonfree-ppds \
+"
+
+pkgs sync
+pkgs install "$PACKAGES"
+sudo systemctl enable --now cups.service avahi-daemon.service
+
+echo "cups-install done. Web interface available on: http://localhost:631/"

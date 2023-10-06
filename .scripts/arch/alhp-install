@@ -1,0 +1,32 @@
+#!/bin/sh -e
+
+if ! [ -f "/lib/ld-linux-x86-64.so.2" ]; then
+  echo "Architecture is not x86-64."
+  exit 1
+fi
+
+ARCH=""
+
+if /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v3 (supported, searched)'; then
+  ARCH='x86-64-v3'
+elif /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v2 (supported, searched)'; then
+  ARCH='x86-64-v2'
+else
+  echo "Architecture is not supported."
+  exit 1
+fi
+
+echo "Supported architecture: $ARCH"
+
+pkgs sync
+pkgs install alhp-keyring alhp-mirrorlist
+
+PACMAN_CONF="/etc/pacman.conf"
+ALHP_MIRRORLIST="/etc/pacman.d/alhp-mirrorlist"
+
+grep -qxF "[core-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[core\]/i [core-$ARCH]\nInclude = $ALHP_MIRRORLIST\n" $PACMAN_CONF
+grep -qxF "[extra-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[extra\]/i [extra-$ARCH]\nInclude = $ALHP_MIRRORLIST\n" "$PACMAN_CONF"
+grep -qxF "[multilib-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[multilib\]/i [multilib-$ARCH]\nInclude = $ALHP_MIRRORLIST\n" "$PACMAN_CONF"
+
+sudo pacman -Suy --noconfirm
+echo "alhp-install done."

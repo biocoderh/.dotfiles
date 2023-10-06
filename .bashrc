@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -f ~/.shrc ]] && . ~/.shrc
+[[ -f "$HOME/.shrc" ]] && . "$HOME/.shrc"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return

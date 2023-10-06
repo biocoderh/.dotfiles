@@ -1,0 +1,47 @@
+#!/bin/sh -e
+# shellcheck disable=SC2068
+
+OPERATION="$1"
+if [ $# -gt 1 ]; then
+  shift
+  SHIFTED=true
+fi
+
+case "$OPERATION" in
+  sync)
+    sudo pacman -Fy
+    ;;
+  install)
+    if [ -z "$SHIFTED" ]; then
+cat << 'EOF'
+error: no targets specified
+usage: pkgs install <package(s)>
+EOF
+      exit 1
+    fi
+
+    if pacman -Si $@ > /dev/null 2>&1; then
+      sudo pacman -S --noconfirm --needed $@
+    elif [ -x "$(command -v paru)" ]; then
+      paru -S --noconfirm --needed --sudoloop --skipreview $@
+    elif [ -x "$(command -v yay)" ]; then
+      yay -S --noconfirm --needed --sudoloop $@
+    else
+      echo "Can't install: " $@
+cat << 'EOF'
+
+paru or yay not installed.
+run `paru-install` to install paru.
+EOF
+      exit 1
+    fi
+    ;;
+  *)
+cat << 'EOF'
+usage:  pkgs <operation> [...]
+operations:
+    pkgs sync
+    pkgs install <package(s)>
+EOF
+  exit 1 ;;
+esac

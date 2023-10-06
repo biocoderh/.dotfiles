@@ -1,0 +1,41 @@
+#!/bin/sh -e
+
+PACKAGES=" \
+flatpak appimagelauncher \
+xclip wl-clipboard \
+xdg-desktop-portal xdg-desktop-portal-hyprland \
+bspwm sxhkd polybar dmenu xorg-xsetroot \
+noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-firacode-nerd \
+libva-utils corectrl \
+firefox \
+telegram-desktop webkit2gtk \
+qbittorrent shadowsocks-electron-bin \
+barrier remmina libvncserver freerdp \
+gimp krita xp-pen-tablet \
+mpv spotify-launcher sonixd-bin electron22-bin jellyfin-media-player \
+"
+
+FLATPAK_PACKAGES=" \
+discord \
+"
+
+pkgs sync
+pkgs install "$PACKAGES"
+
+flatpak install "$FLATPAK_PACKAGES"
+
+[ -c "/dev/kvm" ] && pkgs install qemu-full libvirt virt-manager
+
+# SDDM
+pkgs install sddm sddm-slice-git
+sudo systemctl enable sddm
+sddm-theme sddm-slice
+
+# Wluma
+if [ -d "/sys/bus/iio/devices/iio:device0" ]; then
+  pkgs install wluma
+  sudo usermod -a -G video "$(id -u -n)"
+  systemctl --user enable --now wluma
+fi
+
+echo "desktop-setup done."

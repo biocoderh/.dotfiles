@@ -1,3 +1,3 @@
 #!/bin/bash
 
-[[ -f ~/.profile ]] && . ~/.profile
+[[ -f "$HOME/.profile" ]] && . "$HOME/.profile"

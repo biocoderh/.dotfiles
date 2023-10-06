@@ -1,19 +1,13 @@
-#!/bin/sh
-
-if ! [ -x "$(command -v git)" ]; then
-  echo "git is not installed."
-  exit 1
-fi
+#!/bin/sh -e
 
 GIT_URI="https://github.com/biocoderh/dotfiles.git"
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
-mkdir -p "$STATE_DIR"
-
 GIT_DIR="$STATE_DIR/dotfiles"
 BACKUP_DIR="$STATE_DIR/dotfiles-backup"
 WORK_TREE_DIR="$HOME"
 
+mkdir -p "$STATE_DIR"
 git clone --bare "$GIT_URI" "$GIT_DIR"
 
 dotfiles() {
@@ -31,13 +25,21 @@ fi
 
 dotfiles config status.showUntrackedFiles no
 
-
-# shellcheck disable=SC1091
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
+chmod +x -R "$HOME/.local/bin" "$HOME/.scripts"
 
-chmod +x -R "$HOME/.local/bin"
+cat << EOF
+dotfiles-install done.
 
-echo "running dotfiles-post-install"
-dotfiles-post-install
+Some additional scripts:
+  dotfiles-link - link system files.
+  mitigations [on/off] - set kernel boot mitigations param.
 
-echo "dotfiles-install done."
+Environment (only Arch Linux):
+  full-setup - setup everything except server env.
+  base-setup - base environment with some tweaks.
+  desktop-setup - graphical environment.
+  server-setup - server environment.
+
+Check out README.md or ~/.scripts for more.
+EOF

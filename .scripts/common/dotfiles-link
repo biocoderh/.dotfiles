@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sudo_symlink() {
+  sudo ln -sb "$1" "$2"
+}
+
+[ -d "/usr/share/libinput" ] && sudo_symlink "$HOME/.local/share/libinput/local-overrides.quirks" /usr/share/libinput/local-overrides.quirks
+[ -d "/etc/samba" ] && sudo_symlink "$HOME/.config/samba/smb.conf" /etc/samba/smb.conf
+
+echo "dotfiles-link done."

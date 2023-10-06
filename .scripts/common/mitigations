@@ -1,7 +1,13 @@
-#!/bin/sh
+#!/bin/sh -e
 
 if ! { [ "$1" = "on" ] || [ "$1" = "off" ]; }; then
   echo "Usage: mitigations [on/off]"
+cat << 'EOF'
+Usage: mitigations [on/off]
+Set kernel boot mitigations param.
+
+Note: only systemd-boot supported.
+EOF
   exit 1
 fi
 

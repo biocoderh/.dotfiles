@@ -1,0 +1,10 @@
+#!/bin/sh
+
+SCRIPTS_PATH="$HOME/.scripts/common"
+
+case $(grep ^ID= /etc/os-release | cut -d= -f2) in
+  arch) SCRIPTS_PATH="$SCRIPTS_PATH:$HOME/.scripts/arch" ;;
+  *) ;;
+esac
+
+export PATH="$PATH:$SCRIPTS_PATH"

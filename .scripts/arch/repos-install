@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+PARALLEL_DOWNLOADS="10"
+sudo sed -i "s/ParallelDownloads.*/ParallelDownloads = $PARALLEL_DOWNLOADS/" /etc/pacman.conf
+
+rankmirrors-update
+
+paru-install
+
+alhp-install
+chaotic-aur-install
+archlinuxcn-install
+
+echo "repos-install done."

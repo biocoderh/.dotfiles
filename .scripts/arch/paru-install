@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+sudo pacman -Sy --noconfirm --needed git base-devel
+git clone https://aur.archlinux.org/paru-bin.git
+cd paru-bin
+makepkg -cis --noconfirm --needed
+cd ..
+rm -rdf paru-bin
+
+echo "paru-install done."
