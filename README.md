@@ -26,21 +26,21 @@ All conflicting files would be moved to **.local/state/dotfiles-backup** folder.
 
 ## Fork
 
-To properly fork this repo change **GIT_URI** value in [dotfiles-install](../blob/master/.scripts/common/dotfiles-install#L3) file.
+To properly fork this repo change **GIT_URI** value in [dotfiles-install](.scripts/common/dotfiles-install#L3) file.
 
 
 ## Shell
 
 Prefered shell is zsh, but for compatibility, environment variables and aliases separated to files:
 
-- [.profile](../blob/master/.profile) - environment variables.
-- [.shrc](../blob/master/.shrc) - aliases.
+- [.profile](.profile) - environment variables.
+- [.shrc](.shrc) - aliases.
 
 ### [ZSH](../tree/master/.config/zsh)
 
-- [.zshrc](../blob/master/.config/zsh/.zshrc) - config.
-- [plugins.zsh](../blob/master/.config/zsh/plugins.zsh) - plugins.
-- [key-bindings.zsh](../blob/master/.config/zsh/key-bindings.zsh) - key bindings.
+- [.zshrc](.config/zsh/.zshrc) - config.
+- [plugins.zsh](.config/zsh/plugins.zsh) - plugins.
+- [key-bindings.zsh](.config/zsh/key-bindings.zsh) - key bindings.
 
 lf and fzf integrated.
 
@@ -54,56 +54,56 @@ Plugins:
 - [zdharma-continuum/fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
 
 
-## [Scripts](../tree/master/.scripts)
+## [Scripts](.scripts)
 
-- [env](../blob/master/.scripts/env) - set **PATH** environment variable depend on OS. In **~/.profile**:
+- [env](.scripts/env) - set **PATH** environment variable depend on OS. In **~/.profile**:
  
 ```sh
 [ -f "$HOME/.scripts/env" ] && . "$HOME/.scripts/env"
 ```
 
-### [common](../tree/master/.scripts/common)
+### [common](.scripts/common)
 
 Common scripts, loaded by default.
 
 #### Dotfiles
 
-- [dotfiles-install](../blob/master/.scripts/common/dotfiles-install) - install dotfiles bare repo.
-- [dotfiles-link](../blob/master/.scripts/common/dotfiles-link) - symlink system wide configs.
+- [dotfiles-install](.scripts/common/dotfiles-install) - install dotfiles bare repo.
+- [dotfiles-link](.scripts/common/dotfiles-link) - symlink system wide configs.
 
 #### Tools
 
-- [ssh-copy-keys](../blob/master/.scripts/common/ssh-clone-id) - copy private and public keys to remote host, also add them to ssh agent.
+- [ssh-copy-keys](.scripts/common/ssh-clone-id) - copy private and public keys to remote host, also add them to ssh agent.
 ```sh
 Usage: ssh-clone-id KEY REMOTE
 Example: ssh-clone-id .ssh/id_ed25519 biocoder@192.168.1.3
 ```
 
-- [mitigations](../blob/master/.scripts/common/mitigations) - set kernel boot mitigations param. Note: only systemd-boot supported.
+- [mitigations](.scripts/common/mitigations) - set kernel boot mitigations param. Note: only systemd-boot supported.
 ```sh
 Usage: mitigations [on/off]
 ```
 
-- [sddm-theme](../blob/master/.scripts/common/sddm-theme) - set SDDM theme to conf.
+- [sddm-theme](.scripts/common/sddm-theme) - set SDDM theme to conf.
 ```sh
 Usage: sddm-theme THEME
 ```
 
-### [arch](../tree/master/.scripts/arch)
+### [arch](.scripts/arch)
 
 Arch Linux specific.
 
 #### Environment
 
-- [full-setup](../blob/master/.scripts/arch/server-setup) - setup everything except server env.
-- [base-setup](../blob/master/.scripts/arch/base-setup) - setup base environment with some tweaks.
-- [desktop-setup](../blob/master/.scripts/arch/desktop-setup) - graphical environment.
-- [server-setup](../blob/master/.scripts/arch/server-setup) - server environment.
+- [full-setup](.scripts/arch/server-setup) - setup everything except server env.
+- [base-setup](.scripts/arch/base-setup) - setup base environment with some tweaks.
+- [desktop-setup](.scripts/arch/desktop-setup) - graphical environment.
+- [server-setup](.scripts/arch/server-setup) - server environment.
 
 
 #### Package managers
 
-- [pkgs](../blob/master/.scripts/arch/pkgs) - package managers wrapper, noninteractive, support: pacman, paru, yay. Used in scripts below.
+- [pkgs](.scripts/arch/pkgs) - package managers wrapper, noninteractive, support: pacman, paru, yay. Used in scripts below.
 ```sh
 usage:  pkgs <operation> [...]
 operations:
@@ -111,19 +111,19 @@ operations:
     pkgs install <package(s)>
 ```
 
-- [rankmirrors-update](../blob/master/.scripts/arch/rankmirrors-update) - rank all [mirrors](https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on), process can take a while, some abroad servers can be faster in EU.
-- [paru-install](../blob/master/.scripts/arch/paru-install) - install AUR [paru](https://github.com/Morganamilo/paru) package manager.
+- [rankmirrors-update](.scripts/arch/rankmirrors-update) - rank all [mirrors](https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on), process can take a while, some abroad servers can be faster in EU.
+- [paru-install](.scripts/arch/paru-install) - install AUR [paru](https://github.com/Morganamilo/paru) package manager.
 
 #### Repos
 
-- [repos-install](../blob/master/.scripts/arch/repos-install) - install all repos, paru and run rankmirrors-update.
-- [alhp-install](../blob/master/.scripts/arch/alhp-install) - install [ALHP](https://github.com/an0nfunc/ALHP) repos. Archlinux-based repos build with different x86-64 feature levels, -O3 and LTO.
-- [chaotic-aur-install](../blob/master/.scripts/arch/chaotic-aur-install) - install [Chaotic-AUR](https://github.com/chaotic-aur) repos. An automated building repo for AUR packages.
-- [archlinuxcn-install](../blob/master/.scripts/arch/archlinuxcn-install) - install [archlinuxcn](https://github.com/archlinuxcn/repo) repos. Arch Linux CN Repository.
+- [repos-install](.scripts/arch/repos-install) - install all repos, paru and run rankmirrors-update.
+- [alhp-install](.scripts/arch/alhp-install) - install [ALHP](https://github.com/an0nfunc/ALHP) repos. Archlinux-based repos build with different x86-64 feature levels, -O3 and LTO.
+- [chaotic-aur-install](.scripts/arch/chaotic-aur-install) - install [Chaotic-AUR](https://github.com/chaotic-aur) repos. An automated building repo for AUR packages.
+- [archlinuxcn-install](.scripts/arch/archlinuxcn-install) - install [archlinuxcn](https://github.com/archlinuxcn/repo) repos. Arch Linux CN Repository.
 
 #### Packages
 
-- [extra-install](../blob/master/.scripts/arch/extra-install) - install extra packages.
+- [extra-install](.scripts/arch/extra-install) - install extra packages.
 ```sh
 Usage: extra-install [net|dev|all]
 
@@ -132,5 +132,5 @@ Usage: extra-install [net|dev|all]
     all - all packages.
 ```
 
-- [cups-install](../blob/master/.scripts/arch/cups-install) - install CUPS with foomatic drivers.
-- [obs-install](../blob/master/.scripts/arch/obs-install) - install OBS with some plugins.
+- [cups-install](.scripts/arch/cups-install) - install CUPS with foomatic drivers.
+- [obs-install](.scripts/arch/obs-install) - install OBS with some plugins.
