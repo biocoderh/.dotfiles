@@ -36,7 +36,7 @@ Prefered shell is zsh, but for compatibility, environment variables and aliases 
 - [.profile](.profile) - environment variables.
 - [.shrc](.shrc) - aliases.
 
-### [ZSH](../tree/master/.config/zsh)
+### [ZSH](.config/zsh)
 
 - [.zshrc](.config/zsh/.zshrc) - config.
 - [plugins.zsh](.config/zsh/plugins.zsh) - plugins.
@@ -95,7 +95,7 @@ Arch Linux specific.
 
 #### Environment
 
-- [full-setup](.scripts/arch/server-setup) - setup everything except server env.
+- [full-setup](.scripts/arch/full-setup) - setup everything except server env.
 - [base-setup](.scripts/arch/base-setup) - setup base environment with some tweaks.
 - [desktop-setup](.scripts/arch/desktop-setup) - graphical environment.
 - [server-setup](.scripts/arch/server-setup) - server environment.
