@@ -5,8 +5,9 @@ export SAVEHIST=10000
 export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/history"
 
 [ -z "$PATH_ORIG" ] && export PATH_ORIG="$PATH"
-export PATH="$PATH_ORIG:$HOME/.local/bin"
+export PATH="$PATH_ORIG"
 
+[ -d "$HOME/.local/bin" ] && export PATH="$PATH:$HOME/.local/bin"
 [ -f "$HOME/.scripts/env" ] && . "$HOME/.scripts/env"
 
 if [ -x "$(command -v nvim)" ]; then

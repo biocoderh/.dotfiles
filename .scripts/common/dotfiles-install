@@ -25,8 +25,10 @@ fi
 
 dotfiles config status.showUntrackedFiles no
 
+[ -d "$HOME/.local/bin" ] && chmod +x -R "$HOME/.local/bin"
+[ -d "$HOME/.scripts" ] && chmod +x -R "$HOME/.scripts"
+
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
-chmod +x -R "$HOME/.local/bin" "$HOME/.scripts"
 
 cat << EOF
 dotfiles-install done.
