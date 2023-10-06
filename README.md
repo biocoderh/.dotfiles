@@ -75,8 +75,8 @@ Common scripts, loaded by default.
 
 - [ssh-copy-keys](.scripts/common/ssh-copy-keys) - copy private and public keys to remote host, also add them to ssh agent.
 ```sh
-Usage: ssh-clone-id KEY REMOTE
-Example: ssh-clone-id .ssh/id_ed25519 biocoder@192.168.1.3
+Usage: ssh-copy-keys KEY REMOTE
+Example: ssh-copy-keys .ssh/id_ed25519 biocoder@192.168.1.3
 ```
 
 - [mitigations](.scripts/common/mitigations) - set kernel boot mitigations param. Note: only systemd-boot supported.

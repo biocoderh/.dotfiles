@@ -2,10 +2,10 @@
 
 if [ -z "$1" ] || [ -z "$2" ]; then
 cat << EOF
-Usage: ssh-clone-id KEY REMOTE
+Usage: ssh-copy-keys KEY REMOTE
 Copy private and public keys to remote host, also add them to ssh agent.
 
-Example: ssh-clone-id .ssh/id_ed25519 biocoder@192.168.1.3
+Example: ssh-copy-keys .ssh/id_ed25519 biocoder@192.168.1.3
 EOF
   exit 1
 fi
