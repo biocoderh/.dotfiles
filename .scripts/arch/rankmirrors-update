@@ -1,13 +1,23 @@
 #!/bin/sh -e
 
+PACKAGES=""
+
 if ! [ -x "$(command -v rankmirrors)" ]; then
-  sudo pacman -Sy --noconfirm --needed pacman-contrib
+  PACKAGES="$PACKAGES pacman-contrib"
+fi
+
+if ! [ -x "$(command -v parallel)" ]; then
+  PACKAGES="$PACKAGES parallel"
+fi
+
+if [ "$PACKAGES" != "" ]; then
+  sudo pacman -Sy --noconfirm --needed "$PACKAGES"
 fi
 
 SOURCE="https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on"
 echo "Using source: $SOURCE"
 
 echo "Starting rankmirrors, it can take a while"
-curl -s "$SOURCE" | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors - | sudo tee /etc/pacman.d/mirrorlist
+curl -s "$SOURCE" | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors -p - | sudo tee /etc/pacman.d/mirrorlist
 
 echo "rankmirrors-update done."
