@@ -6,7 +6,7 @@ MEDIA_PATH="/media"
 
 BARRIER_SERVER="192.168.2.10"
 
-sudo groupadd "$MEDIA_GROUP"
+sudo groupadd -f "$MEDIA_GROUP"
 sudo usermod -aG "$MEDIA_GROUP" "$USER"
 sudo chown "$USER:$MEDIA_GROUP" -R "$MEDIA_PATH"
 

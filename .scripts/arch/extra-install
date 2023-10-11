@@ -16,6 +16,7 @@ nodejs npm ts-node \
 php xdebug \
 go \
 python-pip python-virtualenv \
+shellcheck \
 "
 
 echo "extra-install done."

@@ -15,7 +15,7 @@ fi
 
 CONF_FILE="/etc/sddm.conf.d/theme.conf"
 sudo mkdir -p "$(dirname $CONF_FILE)"
-sudo tee "$CONF_FILE" << "END"
+sudo tee "$CONF_FILE" << END
 [Theme]
 Current=$1
 END

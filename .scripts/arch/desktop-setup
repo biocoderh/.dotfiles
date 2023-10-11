@@ -29,7 +29,7 @@ flatpak install "$FLATPAK_PACKAGES"
 # SDDM
 pkgs install sddm sddm-slice-git
 sudo systemctl enable sddm
-sddm-theme sddm-slice
+sddm-theme slice
 
 # Wluma
 if [ -d "/sys/bus/iio/devices/iio:device0" ]; then
