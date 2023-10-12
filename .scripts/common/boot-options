@@ -1,0 +1,78 @@
+#!/bin/sh -e
+
+OPERATION="$1"
+OPTION="$2"
+VALUE="$3"
+
+if ! [ -d "/boot/loader/entries/" ]; then
+  echo "systemd-boot entries not found."
+  exit 1
+fi
+
+ignore_file() {
+  case $1 in
+    *fallback*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+case "$OPERATION" in
+  set)
+    if [ -z "$OPTION" ]; then
+      cat << 'EOF'
+error: option not specified
+Usage: boot-options set <option> [value]
+EOF
+      exit 1
+    fi
+
+    if [ -z "$VALUE" ]; then
+      for f in /boot/loader/entries/*.conf; do
+        ignore_file "$f" && continue
+        if ! grep -q "^options.*$OPTION" "$f"; then
+          echo "$f"
+          sudo sed -i "s/^options.*/& $OPTION/" "$f"
+        fi
+      done
+    else
+      for f in /boot/loader/entries/*.conf; do
+        ignore_file "$f" && continue
+        echo "$f"
+        if grep -q "^options.*$OPTION" "$f"; then
+          # shellcheck disable=SC1087
+          sudo sed -i "/^options/s/[ ^]$OPTION[^ ]*/ $OPTION=$VALUE/" "$f"
+        else
+          sudo sed -i "s/^options.*/& $OPTION=$VALUE/" "$f"
+        fi
+      done
+    fi
+    ;;
+
+  del)
+    if [ -z "$OPTION" ]; then
+      cat << 'EOF'
+error: option not specified
+Usage: boot-options del <option>
+EOF
+      exit 1
+    fi
+
+    for f in /boot/loader/entries/*.conf; do
+      ignore_file "$f" && continue
+      echo "$f"
+      # shellcheck disable=SC1087
+      sudo sed -i "/^options/s/[ ^]$OPTION[^ ]*//" "$f"
+    done
+    ;;
+
+  *)
+    cat << 'EOF'
+Usage: boot-options <operation> [...]
+systemd-boot options manager
+
+operations:
+    boot-options set <option> [value]
+    boot-options del <option>
+EOF
+  exit 1 ;;
+esac

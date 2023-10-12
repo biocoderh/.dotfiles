@@ -79,9 +79,14 @@ Usage: ssh-copy-keys KEY REMOTE
 Example: ssh-copy-keys .ssh/id_ed25519 biocoder@192.168.1.3
 ```
 
-- [mitigations](.scripts/common/mitigations) - set kernel boot mitigations param. Note: only systemd-boot supported.
+- [boot-options](.scripts/common/boot-options) - systemd-boot options manager.
 ```sh
-Usage: mitigations [on/off]
+Usage: boot-options <operation> [...]
+systemd-boot options manager
+
+operations:
+    boot-options set <option> [value]
+    boot-options del <option>
 ```
 
 - [sddm-theme](.scripts/common/sddm-theme) - set SDDM theme to conf.
