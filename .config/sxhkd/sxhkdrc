@@ -4,7 +4,7 @@
 
 # terminal emulator
 super + Return
-	urxvt
+	$TERM
 
 # program launcher
 super + @space

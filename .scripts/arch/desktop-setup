@@ -6,6 +6,7 @@ xclip wl-clipboard \
 xdg-desktop-portal xdg-desktop-portal-hyprland \
 bspwm sxhkd polybar dmenu xorg-xsetroot \
 noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-firacode-nerd \
+wezterm ttf-nerd-fonts-symbols-mono \
 libva-utils corectrl \
 firefox \
 telegram-desktop webkit2gtk \
