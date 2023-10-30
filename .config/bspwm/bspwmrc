@@ -11,11 +11,12 @@ bspc config gapless_monocle      true
 
 xsetroot -solid "#000000"
 
-for i in /sys/class/hwmon/hwmon*/temp*_input; do 
-    if [ "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*}))" = "coretemp: Package id 0" ]; then
-        export HWMON_PATH="$i"
-    fi
+for i in /sys/class/hwmon/hwmon*/temp*_input; do
+  # shellcheck disable=all
+  if [ "$(cat $(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*}))" = "coretemp: Package id 0" ]; then
+    export HWMON_PATH="$i"
+  fi
 done
 
 pgrep -x sxhkd > /dev/null || sxhkd &
-pgrep -x polybar > /dev/null || polybar -r &
+pgrep -x polybar > /dev/null || polybar &
