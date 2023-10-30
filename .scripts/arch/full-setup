@@ -1,12 +1,8 @@
 #!/bin/sh -e
 
-repos-install
-
+repos-setup
 base-setup
 desktop-setup
-
-extra-install all
-cups-install
-obs-install
+meta-install all
 
 echo "full-setup done."

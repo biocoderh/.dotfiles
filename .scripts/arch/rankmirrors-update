@@ -2,17 +2,10 @@
 
 PACKAGES=""
 
-if ! [ -x "$(command -v rankmirrors)" ]; then
-  PACKAGES="$PACKAGES pacman-contrib"
-fi
+[ -x "$(command -v rankmirrors)" ] || PACKAGES="$PACKAGES pacman-contrib"
+[ -x "$(command -v parallel)" ] || PACKAGES="$PACKAGES parallel"
 
-if ! [ -x "$(command -v parallel)" ]; then
-  PACKAGES="$PACKAGES parallel"
-fi
-
-if [ "$PACKAGES" != "" ]; then
-  sudo pacman -Sy --noconfirm --needed "$PACKAGES"
-fi
+[ "$PACKAGES" != "" ] && pkgs install "$PACKAGES"
 
 SOURCE="https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on"
 echo "Using source: $SOURCE"

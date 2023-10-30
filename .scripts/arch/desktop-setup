@@ -20,7 +20,6 @@ FLATPAK_PACKAGES=" \
 discord \
 "
 
-pkgs sync
 pkgs install "$PACKAGES"
 
 flatpak install "$FLATPAK_PACKAGES"

@@ -18,7 +18,6 @@ fi
 
 echo "Supported architecture: $ARCH"
 
-pkgs sync
 pkgs install alhp-keyring alhp-mirrorlist
 
 PACMAN_CONF="/etc/pacman.conf"
@@ -28,5 +27,6 @@ grep -qxF "[core-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[core\]/i [core-
 grep -qxF "[extra-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[extra\]/i [extra-$ARCH]\nInclude = $ALHP_MIRRORLIST\n" "$PACMAN_CONF"
 grep -qxF "[multilib-$ARCH]" "$PACMAN_CONF" || sudo sed -i "/^[^#]*\[multilib\]/i [multilib-$ARCH]\nInclude = $ALHP_MIRRORLIST\n" "$PACMAN_CONF"
 
-sudo pacman -Suy --noconfirm
+pkgs upgrade
+
 echo "alhp-install done."

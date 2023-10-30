@@ -6,6 +6,7 @@ sudo pacman -U --noconfirm --needed 'https://cdn-mirror.chaotic.cx/chaotic-aur/c
 
 PACMAN_CONF="/etc/pacman.conf"
 grep -qxF "[chaotic-aur]" "$PACMAN_CONF" || sudo sed -i '$a\\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' $PACMAN_CONF
-sudo pacman -Sy
+
+pkgs update
 
 echo "chaotic-aur-install done."

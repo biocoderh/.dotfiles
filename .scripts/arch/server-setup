@@ -9,8 +9,8 @@ BARRIER_SERVER="192.168.2.10"
 sudo groupadd -f "$MEDIA_GROUP"
 sudo usermod -aG "$MEDIA_GROUP" "$USER"
 sudo chown "$USER:$MEDIA_GROUP" -R "$MEDIA_PATH"
-
-pkgs sync
+sudo chmod g+s -R "$MEDIA_PATH"
+sudo setfacl -R -d -m g::rwx "$MEDIA_PATH"
 
 # SSH Server
 pkgs install openssh

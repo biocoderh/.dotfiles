@@ -101,19 +101,38 @@ Arch Linux specific.
 #### Environment
 
 - [full-setup](.scripts/arch/full-setup) - setup everything except server env.
+- [repos-setup](.scripts/arch/repos-setup) - setup all repos, paru and run rankmirrors-update.
 - [base-setup](.scripts/arch/base-setup) - setup base environment with some tweaks.
 - [desktop-setup](.scripts/arch/desktop-setup) - graphical environment.
 - [server-setup](.scripts/arch/server-setup) - server environment.
 
+Note: **full-setup** and **base-setup** would disable cpu mitigations, for reset to defaults:
+```sh
+boot-options del mitigations
+```
 
-#### Package managers
 
-- [pkgs](.scripts/arch/pkgs) - package managers wrapper, noninteractive, support: pacman, paru, yay. Used in scripts below.
+#### Packages
+
+- [pkgs](.scripts/arch/pkgs) - package managers wrapper, noninteractive, support: pacman, paru, yay. Used in scripts.
 ```sh
 usage:  pkgs <operation> [...]
 operations:
-    pkgs sync
+    pkgs update
+    pkgs upgrade
     pkgs install <package(s)>
+```
+
+- [meta-install](.scripts/arch/meta-install) - install meta packages.
+```sh
+Usage: meta-install <package(s)>
+Install meta packages.
+
+    all - all packages.
+    net - network packages.
+    dev - development packages.
+    cups - CUPS with foomatic drivers.
+    obs - OBS with some plugins.
 ```
 
 - [rankmirrors-update](.scripts/arch/rankmirrors-update) - rank all [mirrors](https://archlinux.org/mirrorlist/?protocol=https&use_mirror_status=on), process can take a while, some abroad servers can be faster in EU.
@@ -121,21 +140,6 @@ operations:
 
 #### Repos
 
-- [repos-install](.scripts/arch/repos-install) - install all repos, paru and run rankmirrors-update.
 - [alhp-install](.scripts/arch/alhp-install) - install [ALHP](https://github.com/an0nfunc/ALHP) repos. Archlinux-based repos build with different x86-64 feature levels, -O3 and LTO.
 - [chaotic-aur-install](.scripts/arch/chaotic-aur-install) - install [Chaotic-AUR](https://github.com/chaotic-aur) repos. An automated building repo for AUR packages.
 - [archlinuxcn-install](.scripts/arch/archlinuxcn-install) - install [archlinuxcn](https://github.com/archlinuxcn/repo) repos. Arch Linux CN Repository.
-
-#### Packages
-
-- [extra-install](.scripts/arch/extra-install) - install extra packages.
-```sh
-Usage: extra-install [net|dev|all]
-
-    net - network packages.
-    dev - development packages.
-    all - all packages.
-```
-
-- [cups-install](.scripts/arch/cups-install) - install CUPS with foomatic drivers.
-- [obs-install](.scripts/arch/obs-install) - install OBS with some plugins.

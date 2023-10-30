@@ -8,12 +8,15 @@ fzf lf \
 
 PREFERED_SHELL="/usr/bin/zsh"
 
-pkgs sync
 pkgs install "$PACKAGES"
 
 if [ "$SHELL" != "$PREFERED_SHELL" ] && [ -f "$PREFERED_SHELL" ]; then
   echo "Changing current shell $SHELL to $PREFERED_SHELL" 
   chsh -s "$PREFERED_SHELL"
+fi
+
+if [ -f "/boot/loader/loader.conf" ]; then
+  sudo sed -i "s/^timeout.*/timeout 0/" /boot/loader/loader.conf
 fi
 
 # mitigations off

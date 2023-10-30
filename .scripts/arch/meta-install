@@ -1,0 +1,97 @@
+#!/bin/sh -e
+
+usage() {
+  cat << 'EOF'
+Usage: meta-install <package(s)>
+Install meta packages.
+
+    all - all packages.
+    net - network packages.
+    dev - development packages.
+    cups - CUPS with foomatic drivers.
+    obs - OBS with some plugins.
+EOF
+}
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 0
+fi
+
+while test $# -gt 0; do
+  case "$1" in
+    all) ALL_INSTALL=1 ;;
+    net) NET_INSTALL=1 ;;
+    dev) DEV_INSTALL=1 ;;
+    cups) CUPS_INSTALL=1 ;;
+    obs) OBS_INSTALL=1 ;;
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "error: unrecognized parameter '$1'"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+meta_test() {
+  if [ -n "$ALL_INSTALL" ] || [ -n "$1" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+PACKAGES=""
+
+meta_test "$NET_INSTALL" && PACKAGES="$PACKAGES \
+openssh \
+bind nmap \
+wget yt-dlp \
+proxychains-ng \
+iperf3 speedtest-cli \
+"
+
+meta_test "$DEV_INSTALL" && PACKAGES="$PACKAGES \
+lazygit \
+docker \
+sqlite \
+nodejs npm ts-node \
+php xdebug \
+go \
+python-pip python-virtualenv \
+shellcheck \
+"
+
+meta_test "$CUPS_INSTALL" && PACKAGES="$PACKAGES \
+cups \
+avahi \
+foomatic-db-engine \
+foomatic-db \
+foomatic-db-ppds \
+foomatic-db-nonfree \
+foomatic-db-nonfree-ppds \
+"
+
+meta_test "$OBS_INSTALL" && PACKAGES="$PACKAGES \
+obs-studio-git \
+obs-vaapi \
+obs-kmsgrab wlrobs \
+obs-pipewire-audio-capture-bin \
+obs-vkcapture \
+obs-ndi-bin \
+obs-vban \
+obs-backgroundremoval \
+obs-plugin-tuna-bin \
+obs-streamfx \
+"
+
+pkgs install "$PACKAGES"
+
+meta_test "$CUPS_INSTALL" && sudo systemctl enable --now cups.service avahi-daemon.service
+meta_test "$OBS_INSTALL" && sudo systemctl enable --now avahi-daemon.service
+
+echo "meta-install done."

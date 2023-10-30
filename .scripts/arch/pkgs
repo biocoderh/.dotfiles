@@ -1,18 +1,21 @@
 #!/bin/sh -e
 # shellcheck disable=SC2068
 
-OPERATION="$1"
-if [ $# -gt 1 ]; then
-  shift
-  SHIFTED=true
-fi
-
-case "$OPERATION" in
-  sync)
+case "$1" in
+  update)
     sudo pacman -Fy
     ;;
+  upgrade)
+    sudo pacman -Syu --noconfirm
+
+    if [ -x "$(command -v paru)" ]; then
+      paru -Syu --noconfirm --sudoloop --skipreview
+    elif [ -x "$(command -v yay)" ]; then
+      yay -Syu --noconfirm --sudoloop
+    fi
+    ;;
   install)
-    if [ -z "$SHIFTED" ]; then
+    if [ -z "$2" ]; then
 cat << 'EOF'
 error: no targets specified
 usage: pkgs install <package(s)>
@@ -20,16 +23,23 @@ EOF
       exit 1
     fi
 
-    if pacman -Si $@ > /dev/null 2>&1; then
-      sudo pacman -S --noconfirm --needed $@
-    elif [ -x "$(command -v paru)" ]; then
-      paru -S --noconfirm --needed --sudoloop --skipreview $@
-    elif [ -x "$(command -v yay)" ]; then
-      yay -S --noconfirm --needed --sudoloop $@
-    else
-      echo "Can't install: " $@
-cat << 'EOF'
+    shift
 
+    FLAGS="-S"
+    CURRENT_TIME=$(date +%s)
+    UPDATE_TIME=$(stat -c "%Y" /var/lib/pacman/sync)
+
+    # update if db 24 hours old
+    [ $((CURRENT_TIME-UPDATE_TIME)) -gt 86400 ] && FLAGS="-Sy"
+
+    if pacman -Si $@ > /dev/null 2>&1; then
+      sudo pacman "$FLAGS" --noconfirm --needed $@
+    elif [ -x "$(command -v paru)" ]; then
+      paru "$FLAGS" --noconfirm --needed --sudoloop --skipreview $@
+    elif [ -x "$(command -v yay)" ]; then
+      yay "$FLAGS" --noconfirm --needed --sudoloop $@
+    else
+cat << 'EOF'
 paru or yay not installed.
 run `paru-install` to install paru.
 EOF
@@ -40,7 +50,8 @@ EOF
 cat << 'EOF'
 usage:  pkgs <operation> [...]
 operations:
-    pkgs sync
+    pkgs update
+    pkgs upgrade
     pkgs install <package(s)>
 EOF
   exit 1 ;;

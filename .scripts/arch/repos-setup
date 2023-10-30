@@ -7,8 +7,9 @@ rankmirrors-update
 
 paru-install
 
-alhp-install
+alhp-install || echo "ALHP unsupported."
+
 chaotic-aur-install
 archlinuxcn-install
 
-echo "repos-install done."
+echo "repos-setup done."
