@@ -22,8 +22,3 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
 else
   unset MOZ_ENABLE_WAYLAND
 fi
-
-if [ -f "/usr/bin/ksshaskpass" ]; then
-  export SSH_ASKPASS='/usr/bin/ksshaskpass'
-  export SSH_ASKPASS_REQUIRE=prefer
-fi

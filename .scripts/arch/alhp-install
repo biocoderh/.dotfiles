@@ -7,7 +7,9 @@ fi
 
 ARCH=""
 
-if /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v3 (supported, searched)'; then
+if /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v4 (supported, searched)'; then
+  ARCH='x86-64-v4'
+elif /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v3 (supported, searched)'; then
   ARCH='x86-64-v3'
 elif /lib/ld-linux-x86-64.so.2 --help | grep -q 'x86-64-v2 (supported, searched)'; then
   ARCH='x86-64-v2'

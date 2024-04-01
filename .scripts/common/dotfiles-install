@@ -32,12 +32,9 @@ dotfiles config status.showUntrackedFiles no
 cat << EOF
 dotfiles-install done.
 
-Some additional scripts:
-  dotfiles-link - link system files.
-  mitigations [on/off] - set kernel boot mitigations param.
-
 Environment (only Arch Linux):
   full-setup - setup everything except server env.
+  repos-setup - setup all repos, paru and run rankmirrors-update.
   base-setup - base environment with some tweaks.
   desktop-setup - graphical environment.
   server-setup - server environment.

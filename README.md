@@ -27,6 +27,7 @@ All conflicting files would be moved to **.local/state/dotfiles-backup** folder.
 ## Fork
 
 To properly fork this repo change **GIT_URI** value in [dotfiles-install](.scripts/common/dotfiles-install#L3) file.
+Also change \[user\] fields in [.gitconfig](.gitconfig#L2) file.
 
 
 ## Shell
@@ -69,7 +70,6 @@ Common scripts, loaded by default.
 #### Dotfiles
 
 - [dotfiles-install](.scripts/common/dotfiles-install) - install dotfiles bare repo.
-- [dotfiles-link](.scripts/common/dotfiles-link) - symlink system wide configs.
 
 #### Tools
 
@@ -89,28 +89,22 @@ operations:
     boot-options del <option>
 ```
 
-- [sddm-theme](.scripts/common/sddm-theme) - set SDDM theme to conf.
-```sh
-Usage: sddm-theme THEME
-```
-
 ### [arch](.scripts/arch)
 
 Arch Linux specific.
 
 #### Environment
 
-- [full-setup](.scripts/arch/full-setup) - setup everything except server env.
 - [repos-setup](.scripts/arch/repos-setup) - setup all repos, paru and run rankmirrors-update.
 - [base-setup](.scripts/arch/base-setup) - setup base environment with some tweaks.
 - [desktop-setup](.scripts/arch/desktop-setup) - graphical environment.
 - [server-setup](.scripts/arch/server-setup) - server environment.
+- [full-setup](.scripts/arch/full-setup) - setup everything except server env.
 
 Note: **full-setup** and **base-setup** would disable cpu mitigations, for reset to defaults:
 ```sh
 boot-options del mitigations
 ```
-
 
 #### Packages
 
@@ -142,4 +136,3 @@ Install meta packages.
 
 - [alhp-install](.scripts/arch/alhp-install) - install [ALHP](https://github.com/an0nfunc/ALHP) repos. Archlinux-based repos build with different x86-64 feature levels, -O3 and LTO.
 - [chaotic-aur-install](.scripts/arch/chaotic-aur-install) - install [Chaotic-AUR](https://github.com/chaotic-aur) repos. An automated building repo for AUR packages.
-- [archlinuxcn-install](.scripts/arch/archlinuxcn-install) - install [archlinuxcn](https://github.com/archlinuxcn/repo) repos. Arch Linux CN Repository.

@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-PACMAN_CONF="/etc/pacman.conf"
-grep -qxF "[archlinuxcn]" "$PACMAN_CONF" || sudo sed -i '$a\\n[archlinuxcn]\nServer = https://repo.archlinuxcn.org/$arch' $PACMAN_CONF
-
-pkgs update
-pkgs install archlinuxcn-keyring
-
-echo "archlinuxcn-install done."

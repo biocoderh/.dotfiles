@@ -4,6 +4,7 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 
 alias dotfiles='/usr/bin/git --git-dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/ --work-tree=$HOME'
+alias dotfiles-env='GIT_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/ GIT_WORK_TREE=$HOME'
 
 alias pipewire-restart='systemctl --user restart wireplumber pipewire pipewire-pulse'
 

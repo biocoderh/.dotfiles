@@ -4,8 +4,6 @@ USER=$(whoami)
 MEDIA_GROUP="media"
 MEDIA_PATH="/media"
 
-BARRIER_SERVER="192.168.2.10"
-
 sudo groupadd -f "$MEDIA_GROUP"
 sudo usermod -aG "$MEDIA_GROUP" "$USER"
 sudo chown "$USER:$MEDIA_GROUP" -R "$MEDIA_PATH"
@@ -23,10 +21,23 @@ sudo cupsctl --remote-admin --remote-any --share-printers
 # Samba
 pkgs install samba avahi wsdd2
 sudo smbpasswd -a "$USER"
+sudo tee /etc/samba/smb.conf > /dev/null << EOF
+[global]
+    server string = %h
+    use sendfile = yes
+    min receivefile size = 16384
 
-SMB_CONF="$HOME/.config/samba/smb.conf"
-[ -f "$SMB_CONF" ] && sudo ln -sb "$SMB_CONF" /etc/samba/smb.conf
+[homes]
+   writable = yes
 
+[printers]
+   guest ok = yes
+   printable = yes
+
+[media]
+    path = $MEDIA_PATH
+    writable = yes
+EOF
 sudo systemctl enable --now smb.service avahi-daemon.service wsdd2.service
 
 # qBittorrent
@@ -37,13 +48,5 @@ sudo systemctl enable --now "qbittorrent-nox@$USER.service"
 pkgs install jellyfin-server jellyfin-web
 sudo usermod -aG "$MEDIA_GROUP" jellyfin
 sudo systemctl enable --now jellyfin.service
-
-# Barrier (if already installed)
-SDDM_XSETUP="/usr/share/sddm/scripts/Xsetup"
-BARRIERC="/usr/bin/barrierc"
-
-if [ -f "$SDDM_XSETUP" ] && [ -f "$BARRIERC" ] && ! grep -qF "$BARRIERC" "$SDDM_XSETUP"; then
-  echo "$BARRIERC --disable-crypto $BARRIER_SERVER" | sudo tee -a "$SDDM_XSETUP"
-fi
 
 echo "server-setup done."

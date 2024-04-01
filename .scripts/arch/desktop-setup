@@ -2,16 +2,13 @@
 
 PACKAGES=" \
 flatpak appimagelauncher \
-xclip wl-clipboard \
-xdg-desktop-portal xdg-desktop-portal-hyprland \
-bspwm sxhkd polybar dmenu xorg-xsetroot \
 noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-firacode-nerd \
 wezterm ttf-nerd-fonts-symbols-mono \
 libva-utils corectrl \
-firefox \
+firefox chromium \
 telegram-desktop webkit2gtk \
-qbittorrent shadowsocks-electron-bin \
-barrier remmina libvncserver freerdp \
+qbittorrent \
+remmina libvncserver freerdp \
 gimp krita xp-pen-tablet \
 mpv spotify-launcher sonixd-bin electron22-bin jellyfin-media-player \
 "
@@ -21,21 +18,15 @@ discord \
 "
 
 pkgs install "$PACKAGES"
-
 flatpak install "$FLATPAK_PACKAGES"
 
+# virt
 [ -c "/dev/kvm" ] && pkgs install qemu-full libvirt virt-manager
 
-# SDDM
-pkgs install sddm sddm-slice-git
-sudo systemctl enable sddm
-sddm-theme slice
-
-# Wluma
-if [ -d "/sys/bus/iio/devices/iio:device0" ]; then
-  pkgs install wluma
-  sudo usermod -a -G video "$(id -u -n)"
-  systemctl --user enable --now wluma
+# auto-cpufreq
+if [ -d "/sys/class/power_supply/BAT0" ]; then
+  pkgs install auto-cpufreq
+  sudo systemctl enable --now auto-cpufreq
 fi
 
 echo "desktop-setup done."

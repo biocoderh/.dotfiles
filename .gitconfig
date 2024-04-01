@@ -4,6 +4,6 @@
 [init]
 	defaultBranch = master
 [alias]
-	dotfiles = !git --git-dir=$HOME/.dotfiles --work-tree=$HOME
+	dotfiles = !git --git-dir=$HOME/.local/state/dotfiles --work-tree=$HOME
 [push]
 	autoSetupRemote = true
